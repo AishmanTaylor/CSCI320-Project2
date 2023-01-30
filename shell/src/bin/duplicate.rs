@@ -1,3 +1,5 @@
+use std::fs;
+
 fn main() {
     // Sourced from: https://www.tutorialspoint.com/rust/rust_input_output.htm
     let mut inputName = String::new();
@@ -5,5 +7,5 @@ fn main() {
     let mut outputName = String::new();
     println!("Enter the new name of the file: ");
     // Sourced from: https://doc.rust-lang.org/std/fs/fn.rename.html 
-    fs::rename(inputName, outputName)?;
+    fs::copy(inputName, outputName);  // Copy foo.txt to bar.txt
 }
