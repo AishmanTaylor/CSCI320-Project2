@@ -1,23 +1,19 @@
-use std::{env::args, fs::{File, self}, io::Read, process::Command};
+use std::{env::args, fs::{File}, io::{BufReader, BufRead}};
 
-fn main() -> std::io::Result<()>{
+fn main() -> anyhow::Result<()>{
+    let mut numLines = 10;
     for arg in args().skip(1) {
-        match dump(arg.as_str()) {
-            Ok(_) => {fs::remove_file(file!())?}
-            Err(e) => {
-                print!("Error when processing file {arg}: {e}");
+        if arg.starts_with("-"){
+            numLines = arg[1..].parse::<usize>()?;
+        } else {
+            let file = File::open(arg)?;
+            let buffer = BufReader::new(file);
+            for (i, line) in buffer.lines().enumerate() {
+                if i < numLines {
+                    println!("{}", line?);
+                }
             }
         }
     }
-    Ok(())
-}
-
-fn dump(filename: &str) -> std::io::Result<()> {
-    let mut file = File::open(filename)?;
-    let mut contents = String::new();
-    Command::new("cmd")
-            .args(["head 10 {file}"])
-            .output()
-            .expect("failed to execute process");
     Ok(())
 }
